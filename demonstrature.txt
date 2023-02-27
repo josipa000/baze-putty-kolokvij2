@@ -1,0 +1,63 @@
+1.
+Kreiraj funkciju zadatak1 koja računa
+koliko je dana prošlo od 1.svibnja 2010 i 10. lipnja 2015 do danas.
+Funkciju primijeniti u minimalno jednom okidaču ili proceduri
+tako što će primijeniti neki broj između dobivena dva.
+
+select datediff(now(),'2010-05-01') -> 3678
+select datediff(now(),'2015-06-10') -> 1812
+
+DELIMITER $$
+CREATE FUNCTION zadatak1() RETURNS int
+begin
+return FLOOR(1812 + RAND() * (3678 - 1812 +1));
+end;
+$$
+DELIMITER ;
+
+Kreiraj funkciju zadatak1 koja računa koliko je minuta prošlo od
+2. srpnja 2019. do danas. Funkciju primijeni blabla.
+
+--(provjeri jel radi i sta ti vraća!)
+select datediff(now(),'2019-07-02')*24*60;
+
+DELIMITER $$
+CREATE FUNCTION zadatak1() RETURNS int
+begin
+return datediff(now(),'2019-07-02')*24*60;
+end;
+$$
+DELIMITER ;
+
+Kreiraj funkciju zadatak1 koja datum u string obliku pretvara u
+'yyyy-mm-dd' format. Za potrebe kreiranja funkcije koristit
+će se datum 2.4.2017. Funkciju blabla.
+
+select STR_TO_DATE ('2nd April 2017','%D %M %Y');
+select STR_TO_DATE ('2.4.2017.','%e.%c.%Y.');
+
+DELIMITER $$
+CREATE FUNCTION zadatak1() RETURNS datetime
+begin
+return STR_TO_DATE ('2nd April 2017','%D %M %Y');
+end;
+$$
+DELIMITER ;
+
+delimiter xD
+create function zadatak1() returns datetime;
+begin
+return
+date_format(now(), '%d.%m');
+end;
+xD
+delimiter ;
+
+delimiter xD
+create function zadatak1() returns varchar(50);
+begin
+return
+dayname(date_format('5.6.''80', '%c.%e.''%y'));
+end;
+xD
+delimiter ;

@@ -1,0 +1,128 @@
+create table punac(
+    id int(11) not null primary key auto_increment,
+    maraka decimal(13,10),
+    majica varchar(37),
+    kuna decimal(16,7),
+    nausnica int(11),
+    zena int(11) not null
+);
+
+create table zena(
+    id int(11) not null primary key auto_increment,
+    asocijalno tinyint(1),
+    suknja varchar(33),
+    kuna decimal(13,7),
+    narukvica int(11) not null
+);
+
+create table djevojka(
+    id int(11) not null primary key auto_increment,
+    narukvica int(11) not null,
+    haljina varchar(33) not null,
+    prstena int(11) not null,
+    ogrlica int(11)
+);
+
+create table snasa(
+    id int(11) not null primary key auto_increment,
+    bojakose varchar(41) not null,
+    hlace varchar(42) not null,
+    ekstoventno tinyint(1),
+    introvertno tinyint(1) not null,
+    narukvica int(11) not null
+);
+
+create table zarucnik(
+    id int(11) not null primary key auto_increment,
+    majica varchar(41),
+    gustoca decimal(13,6),
+    nausnica int(11),
+    carape varchar(32) not null,
+    narukvica int(11) not null
+);
+
+alter tabe punac add foreign key (zena) references zena(id);
+
+select * from information_schema.table_constraints
+where table_schema = 'mbuljan_19_kv' and constraint_type =
+'FOREIGN KEY';
+
+DELIMITER xD
+create function zadatak1() returns int
+begin
+return
+FLOOR(1077 + RAND() * ( 4650 - 1077 +1));
+end;
+xD
+DELIMITER ;
+
+delimiter xD
+create procedure zadatak2()
+begin
+    declare x int;
+    set x=1;
+    start transaction;
+        repeat
+            insert into snasa(bojakose,hlace,introvertno,narukvica)
+            values('plava','rifle',1,zadatak1()); 
+            set x = x + 1;
+        until x >  15317
+        end repeat;
+    commit;
+end;
+xD
+delimiter ;
+
+delimiter xD
+create trigger zadatak3 after insert on snasa for each
+row
+begin
+    insert into djevojka (narukvica,haljina,prstena) 
+    values(zadatak1(),'lepa',4),(zadatak1(),'lepa',4) ;
+end;
+xD
+delimiter ;
+
+select count(*) from snasa;
+
+select count(*) from djevojka;
+
+delimiter xD
+create procedure zadatak4()
+begin
+    declare done int default false;
+    declare b, broj int;
+    declare x int;
+    declare cur cursor for select id from snasa;
+    declare continue handler for not found set done = true;
+    open cur;
+        set broj=0;
+        read_loop: loop
+            fetch cur into b;
+            if b%9000=0 then
+                set broj=broj+b;
+            end if;
+            if done then
+                leave read_loop;
+            end if;
+        end loop;
+    close cur;
+    set x=1;
+    start transaction;
+    repeat 
+            insert into zena (narukvica)
+            values(zadatak1());
+            insert into punac (zena)
+            values(LAST_INSERT_ID()); 
+            set x = x + 1;
+        until x > broj
+        end repeat;
+    commit;
+end;
+xD
+delimiter ;
+
+call zadatak4;
+
+select count(*) from punac;
+

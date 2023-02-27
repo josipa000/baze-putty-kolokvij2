@@ -1,0 +1,105 @@
+mbuljan_19
+6ECh4bhR
+
+mysql -u mbuljan_19 -p mbuljan_19_kol2
+Canyon_122
+
+select * from zadatak;
+zadatak 8 pises
+
+create table fakultet(
+    id int(11) not null primary key auto_increment,
+    facebook varchar(30),
+    roden datetime,
+    kolicina decimal(12,9),
+    napravljen datetime,
+    racun int(11) not null
+);
+
+create table racun(
+    id int(11) not null primary key auto_increment,
+    boja varchar(39) not null,
+    zabranjen tinyint(1) not null,
+    komada int(11) not null,
+    mobitel varchar(39),
+    posuden datetime
+);
+
+create table opcina(
+    id int(11) not null primary key auto_increment,
+    naziv varchar(48),
+    adresa varchar(35),
+    iznos decimal(16,8) not null,
+    roden datetime not null
+);
+
+create table ucenik(
+    id int(11) not null primary key auto_increment,
+    posuden datetime not null,
+    tezina decimal(18,10),
+    naziv varchar(48),
+    datum datetime not null
+);
+
+create table drzava(
+    id int(11) not null primary key auto_increment,
+    email varchar(48) not null,
+    mreznomjesto varchar(33),
+    visina int(11) not null,
+    boja varchar(38),
+    posuden datetime not null
+);
+
+alter table fakultet add foreign key (racun) references racun(id);
+
+show tables;
+
+select * from information_schema.table_constraints
+where table_schema = 'mbuljan_19_kol2' and constraint_type =
+'FOREIGN KEY';
+
+DELIMITER $$  
+CREATE FUNCTION zadatak1() RETURNS datetime  
+begin  
+return from_unixtime(
+    unix_timestamp('2016-01-11') + floor(
+        rand() * (
+            unix_timestamp('2021-12-25') - unix_timestamp('2016-01-11') + 1
+        )
+    )
+);  
+end;  
+$$  
+DELIMITER ;
+
+delimiter xD
+create procedure zadatak2()
+begin
+    declare x int;
+    set x=1;
+    start transaction;
+        repeat
+            insert into ucenik(posuden,datum)
+            values(zadatak1(),2019-02-02); 
+            set x = x + 1;
+        until x >  1933
+        end repeat;
+    commit;
+end;
+xD
+delimiter ;
+
+delimiter xD
+create trigger zadatak3 after update on ucenik for each
+row
+begin
+        insert into opcina (iznos,roden) 
+        values(11,zadatak1());
+end;
+xD
+delimiter ;
+
+update ucenik set datum=2018-04-02
+where id=8;
+
+(zadatak1(),2019-02-02)

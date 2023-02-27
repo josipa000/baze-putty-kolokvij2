@@ -1,0 +1,88 @@
+create table punac(
+    id int(11) not null primary key auto_increment,
+    novcica decimal(14,6),
+    introvertno tinyint(1) not null,
+    indiferentno tinyint(1) not null,
+    narukvica int(11) not null,
+    zarucnica int(11)
+);
+
+create table zarucnica(
+    id int(11) not null primary key auto_increment,
+    introvertno tinyint(1) not null,
+    novcica decimal(16,7),
+    stilfrizura varchar(43) not null,
+    prstena int(11) not null
+);
+
+create table decko(
+    id int(11) not null primary key auto_increment,
+    narukvica tinyint(1) not null,
+    maraka decimal(16,10) not null,
+    nausnica int(11),
+    prstena int(11)
+);
+
+create table prijateljica(
+    id int(11) not null primary key auto_increment,
+    bojakose varchar(35),
+    kratkamajica varchar(35) not null,
+    drugiputa datetime not null,
+    indiferentno tinyint(1),
+    narukvica int(11) not null
+);
+
+create table sestra (
+    id int(11) not null primary key auto_increment,
+    dukserica varchar(44) not null,
+    lipa decimal(15,7),
+    nausnica int(11),
+    asocijalno tinyint(1),
+    narukvica int(11)
+);
+
+alter table punac add foreign key(zarucnica) references zarucnica(id);
+
+select * from information_schema.table_constraints
+where table_schema = 'mbuljan_19_kv' and constraint_type =
+'FOREIGN KEY';
+
+DELIMITER xD
+create function zadatak1() returns int
+begin
+return
+FLOOR(1346 + RAND() * ( 4592 - 1346 +1));
+end;
+xD
+DELIMITER ;
+
+delimiter xD
+create procedure zadatak2()
+begin
+    declare x int;
+    set x=1;
+    start transaction;
+        repeat
+            insert into sestra (dukserica,nausnica)
+            values('plava', zadatak1()); 
+            set x = x + 1;
+        until x >  62839 
+        end repeat;
+    commit;
+end;
+xD
+delimiter ;
+
+delimiter xD
+create trigger zadatak3 after insert on sestra for each
+row
+begin
+    insert into decko (narukvica,maraka) 
+    values(1,12.5),(1,12.5) ;
+end;
+xD
+delimiter ;
+
+select count(*) from sestra;
+
+select count(*) from decko;

@@ -1,0 +1,132 @@
+create table brat (
+    id int(11) not null primary key auto_increment,
+    carape varchar(38) not null,
+    haljina varchar(47),
+    asocijalno tinyint(1),
+    maraka decimal(14,10),
+    narukvica int(11),
+    djevojka int(11) not null
+);
+
+create table djevojka(
+    id int(11) not null primary key auto_increment,
+    novcica decimal(16,7) not null,
+    treciputa datetime,
+    nausnica int(11) not null,
+    narukvica int(11) not null
+);
+
+create table prijatelj (
+    id int(11) not null primary key auto_increment,
+    lipa decimal(14,10) not null,
+    indiferentno tinyint(1),
+    hlace varchar(32),
+    nausnica int(11)
+);
+
+create table sestra (
+    id int(11) not null primary key auto_increment,
+    modelnaocala varchar(33),
+    hlace varchar(42) not null,
+    treciputa datetime not null,
+    prstena int(11),
+    ogrlica int(11) not null
+);
+
+create table zarucnica(
+    id int(11) not null primary key auto_increment,
+    lipa decimal(14,9),
+    jmbag char(11),
+    hlace varchar(40) not null,
+    introvertno tinyint(1),
+    narukvica int(11) not null
+);
+
+alter table brat add foreign key (djevojka) references djevojka(id);
+
+select * from information_schema.table_constraints
+where table_schema = 'mbuljan_19_kv' and constraint_type =
+'FOREIGN KEY';
+
+delimiter xD
+create function zadatak1() returns int
+begin
+return
+FLOOR(1248 + RAND() * ( 4766 - 1248 +1));
+end;
+xD
+DELIMITER ;
+
+delimiter xD
+create procedure zadatak2()
+begin
+    declare x int;
+    set x=1;
+    start transaction;
+        repeat
+            insert into prijatelj(lipa)
+            values(12.1); 
+            set x = x + 1;
+        until x >  68514
+        end repeat;
+    commit;
+end;
+xD
+delimiter ;
+
+delimiter xD
+create trigger zadatak3 after insert on prijatelj for each
+row
+begin
+    insert into zarucnica (hlace,narukvica) 
+    values('plave',zadatak1()),('crvena',zadatak1()) ;
+end;
+xD
+delimiter ;
+
+call zadatak2;
+
+select count(*) from prijatelj;
+
+select count(*) from zarucnica;
+
+delimiter xD
+create procedure zadatak4()
+begin
+    declare done int default false;
+    declare b, broj int;
+    declare x int;
+    declare cur cursor for select id from prijatelj;
+    declare continue handler for not found set done = true;
+    open cur;
+        set broj=0;
+        read_loop: loop
+            fetch cur into b;
+            if b%9000=0 then
+                set broj=broj+b;
+            end if;
+            if done then
+                leave read_loop;
+            end if;
+        end loop;
+    close cur;
+    set x=1;
+    start transaction;
+    repeat 
+            insert into djevojka (novcica,nausnica,narukvica)
+            values(11.6,zadatak1(),zadatak1());
+            insert into brat (carape,djevojka)
+            values('crne',LAST_INSERT_ID()); 
+            set x = x + 1;
+        until x > broj
+        end repeat;
+    commit;
+end;
+xD
+delimiter ;
+
+call zadatak4;
+
+select count(*) from brat;
+
+

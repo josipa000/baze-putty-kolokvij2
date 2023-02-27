@@ -1,0 +1,90 @@
+create table zarucnik(
+    id int(11) not null primary key auto_increment,
+    stilfrizura varchar(32),
+    kuna decimal(13,9) not null,
+    eura decimal(14,9),
+    indiferentno tinyint(1),
+    prstena int(11),
+    punac int(11)
+);
+
+create table punac(
+    id int(11) not null primary key auto_increment,
+    majica varchar(31) not null,
+    kuna decimal(12,5) not null,
+    ogrlica int(11) not null,
+    narukvica int(11)
+);
+
+create table snasa(
+    id int(11) not null primary key auto_increment,
+    stilfrizura varchar(38),
+    majica varchar(35),
+    modelnaocala varchar(45) not null,
+    nausnica int(11)
+);
+
+create table neprijateljica(
+    id int(11) not null primary key auto_increment,
+    kratkamajica varchar(36) not null,
+    bojakose varchar(41) not null,
+    treciputa datetime not null,
+    narukvica int(11),
+    ogrlica int(11)
+);
+
+create table zena(
+    id int(11) not null primary key auto_increment,
+    modelnaocala varchar(40),
+    dukserica varchar(46) not null,
+    suknja varchar(40) not null,
+    bojakose varchar(31) not null,
+    narukvica int(11)
+);
+
+alter table zarucnik add foreign key(punac) references punac(id);
+
+select * from information_schema.table_constraints
+where table_schema = 'mbuljan_19_kv' and constraint_type =
+'FOREIGN KEY';
+
+DELIMITER xD
+create function zadatak1() returns int
+begin
+return
+FLOOR(1027 + RAND() * ( 5327 - 1027 +1));
+end;
+xD
+DELIMITER ;
+
+delimiter xD
+create procedure zadatak2()
+begin
+    declare x int;
+    set x=1;
+    start transaction;
+        repeat
+            insert into neprijateljica (kratkamajica,bojakose,treciputa,narukvica)
+            values('plava','smeđa',2000-11-10,zadatak1()); 
+            set x = x + 1;
+        until x >  62839 
+        end repeat;
+    commit;
+end;
+xD
+delimiter ;
+
+delimiter $$
+create trigger zadatak3 after insert on neprijateljica for each
+row
+begin
+    insert into zena (dukserica,suknja,bojakose) 
+    values('kul','y','x'),('kul','y','x') ;
+end;
+$$
+delimiter ;
+
+select count(*) from neprijateljica;
+
+select count(*) from zena;
+

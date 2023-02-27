@@ -1,0 +1,64 @@
+create table zupanija (
+    id int(11) not null primary key auto_increment,
+    ime varchar(36),
+    kolicina decimal(14,9),
+    promjer decimal(14,7),
+    komada int(11),
+    prodan datetime,
+    zgrada int(11) not null
+);
+
+create table zgrada (
+   id int(11) not null primary key auto_increment,
+   mreznomjesto varchar(48) not null,
+   postanskibroj varchar(36) not null,
+   omogucen tinyint(1) not null,
+   napravljen datetime not null,
+   roden datetime not null 
+);
+
+create table kolegij(
+    id int(11) not null primary key auto_increment,
+    email varchar(46) not null,
+    kupljen datetime,
+    broj int(11) not null,
+    kreiran datetime
+);
+
+create table prostorija (
+    id int(11) not null primary key auto_increment,
+    omogucen tinyint(1),
+    aktivan tinyint(1),
+    volumen decimal(15,7),
+    kreiran datetime,
+    prodan datetime
+);
+
+create table smjer(
+    id int(11) not null primary key auto_increment,
+    postanskibroj varchar(32) not null,
+    dijagnoza varchar(43),
+    adresa varchar(50),
+    napravljen datetime not null,
+    posuden datetime not null
+);
+
+alter table zupanija add foreign key (zgrada) references zgrada(id);
+
+
+delimiter $$
+create procedure zadatak2()
+begin
+    declare x int;
+    set x=1;
+    start transaction;
+        repeat
+            insert into prostorija(kreiran,prodan)
+            values(zadatak1(),2020-03-02); 
+            set x = x + 1;
+        until x >  4310
+        end repeat;
+    commit;
+end;
+$$
+delimiter ;
